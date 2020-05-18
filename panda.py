@@ -31,10 +31,19 @@ axis_info = {
         "nose_length": ["Nose Length", "Iterations of Foam Making", "Nose Length"]  
         }
 
+caption = """
+    The immediate impact of iterations of foam nest constructions on tadpole morphometries. L. fragilis nests were collected and allowed to develop in their original, parentally produced foam until twelve days (x=0) in an ambient laboratory. The clutch of tadpoles recreated foam over two days (x=2), then morphometries were taken from each clutch. Foam was rinsed again so tadpoles could recreate foam for for the second time over two more days (x=4), and morphometries were taken again. Foam was rinsed a third time so tadpoles could recreate foam for the third time over two more days (x=6). 
+"""
 
-make_plot(df=df, x="dias_en_foam", y=y_axes, plotting_method=make_boxsubplot_by_trait, extra_info=axis_info)
-
+# for box plots
+make_plot(df=df, x="dias_en_foam", y=y_axes, plotting_method=make_boxsubplot_by_trait, extra_info=axis_info, caption=caption)
+# plt.tight_layout()
 plt.draw()
-plt.savefig("figs.png", dpi=100)
-# plt.show() # this needs to come after the plt.savefig()
+plt.savefig("figs.jpg",
+        dpi=None,
+        quaility=None, # JPG quality; 1 <= x <= 95; None defaults to 95
+        optimize=True, # optimizes JPEGs
+        edgecolor='black',
+        orientation='portrait'
+        )
 plt.close()

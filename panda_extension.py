@@ -23,8 +23,8 @@ def init_data(file_name=False, data_type="csv", style="white"):
     Initiaize Numpy, Pandas, PyPlot, and Seaborn. Import data (csv by default)
     and export a dataframe.
     """
-    # sns.set() # initalize seaborn
-    # sns.set_style(style)
+    sns.set() # initalize seaborn
+    sns.set_style(style)
 
     # default case
     if data_type == "csv":
@@ -46,7 +46,7 @@ def make_boxsubplot_by_trait(df=pd.DataFrame(), ax=False, x=False, y=False, titl
 
     else:
 
-        title = title if title == False else "" 
+        title = ""  if title == False else title 
         xlabel = x if xlabel == False else xlabel
         ylabel = y if ylabel == False else ylabel
 
@@ -62,7 +62,6 @@ def make_boxsubplot_by_trait(df=pd.DataFrame(), ax=False, x=False, y=False, titl
         mean_df = pd.DataFrame(data=mean_df)
 
         # use Seaborn to make plots
-        
         sns.boxplot(ax=ax, x=x , y=y, data=df)
         sns.swarmplot(ax=ax, x=x, y=y, data=df, color='k')
         sns.lineplot(ax=ax, x=x, y=y, data=mean_df, color='k', markers=True) 
@@ -70,7 +69,7 @@ def make_boxsubplot_by_trait(df=pd.DataFrame(), ax=False, x=False, y=False, titl
         # plt.show()
         
         
-def make_plot(df=pd.DataFrame(), x=False, y=[], plotting_method=False, extra_info={}):
+def make_plot(df=pd.DataFrame(), x=False, y=[], plotting_method=False, extra_info={}, caption=False, plotsize_factor=4):
     """
     Make a graph
     Take a list of y axis, specify the x axis, make sure to pass in the dataframe
@@ -81,8 +80,12 @@ def make_plot(df=pd.DataFrame(), x=False, y=[], plotting_method=False, extra_inf
     t_cols = 3
     t_rows = num_of_plots//t_cols + 1
 
-    fig, ax = plt.subplots(nrows=t_rows, ncols=t_cols, figsize=(4*t_cols, 4*t_rows))
-    # fig, ax = plt.subplots(nrows=t_rows, ncols=t_cols)
+    fig, ax = plt.subplots(nrows=t_rows, ncols=t_cols, figsize=(plotsize_factor*t_cols, plotsize_factor*t_rows))
+    plt.subplots_adjust(hspace=0.5, wspace=0.5)
+
+    # for caption
+    caption = ""  if caption == False else caption 
+    fig.suptitle(caption, y=0.05, fontsize=10, wrap=True)
 
     for i, el in enumerate(y, start=0):
         # determines the positions of the enumerated subplot
