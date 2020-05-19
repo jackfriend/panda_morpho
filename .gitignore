@@ -1,4 +1,5 @@
 # Repo Specific
+config.py
 *.csv
 *.pyc
 __pycache__
