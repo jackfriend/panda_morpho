@@ -36,7 +36,14 @@ def init_data(file_name=False, data_type="csv", style="white"):
         pass
 
 
-def make_boxsubplot_by_trait(df=pd.DataFrame(), ax=False, x=False, y=False, title=False, xlabel=False, ylabel=False):
+def make_boxsubplot_by_trait(df=pd.DataFrame(),
+        ax=False,
+        x=False,
+        y=False,
+        title=False,
+        mean=False,
+        xlabel=False,
+        ylabel=False):
     """
     Makes a graph
     """
@@ -62,9 +69,12 @@ def make_boxsubplot_by_trait(df=pd.DataFrame(), ax=False, x=False, y=False, titl
         mean_df = pd.DataFrame(data=mean_df)
 
         # use Seaborn to make plots
-        sns.boxplot(ax=ax, x=x , y=y, data=df)
+        sns.boxplot(ax=ax, x=x , y=y, data=df, color="white")
         sns.swarmplot(ax=ax, x=x, y=y, data=df, color='k')
-        sns.lineplot(ax=ax, x=x, y=y, data=mean_df, color='k', markers=True) 
+
+        if mean:
+            sns.lineplot(ax=ax, x=x, y=y, data=mean_df, color='k', markers=True) 
+        
         ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
         # plt.show()
         
