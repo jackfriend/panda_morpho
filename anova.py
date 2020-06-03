@@ -1,12 +1,11 @@
 import pandas as pd
 import numpy
 import scipy.stats as stats
-from panda_extension import *
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-from panda_extension import *
+from util import *
 import config
 
 
@@ -45,7 +44,7 @@ def get_anova(dataframe, x=None, y=None, categories=[]):
 
 
 if __name__ == "__main__":
-    df = init_data(config.input_path)
+    df = init_data(config.INPUT_PATH)
     df = clean_up(df, x="dias_en_foam", y="total_length")
     fstat, pvalue = fstat_and_pvalue(df[2], df[4], df[6])
     anova = get_anova(df, x="dias_en_foam", y="total_length", categories=[0, 2, 4, 6])
@@ -57,7 +56,7 @@ if __name__ == "__main__":
 
     df = None # reset df
 
-    df = init_data(config.input_path)
+    df = init_data(config.INPUT_PATH)
     df = clean_up(df, x="dias_en_foam", y="total_length", log=True)
     fstat, pvalue = fstat_and_pvalue(df[2], df[4], df[6])
     anova = get_anova(df, x="dias_en_foam", y="total_length", categories=[0, 2, 4, 6])

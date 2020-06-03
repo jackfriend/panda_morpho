@@ -3,37 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def help_me():
-    """
-    recap of functions below
-    """
-    print("""
-    > init_data(file_name=\"data.csv\", data_type=\"csv\", style=\"any seaborn style\")
-    \t Initalize Seaborn. 
-    \t Import data from an external file and return it as a Panda Dataframe
-    """)
-    print("""
-    > make_boxsubplot_by_trait(df=DataFrame, ax=axis-subplot, x=\"x-axis\", y=\"y-axis\", title=\"title\", xlabel=\"x axis label\", ylabel=\"y axis label\")
-    \t Takes a Panda Dataframe that will be inputted into a subplot. Shows a box and whisker plot, with jitter, against a line graph of the increae.
-    \t Optionally takes a title and replacement x-axis and y-axis labels
-    """)
+import config
+from util import *
 
-def init_data(file_name=False, data_type="csv", style="white"):
-    """
-    Initiaize Numpy, Pandas, PyPlot, and Seaborn. Import data (csv by default)
-    and export a dataframe.
-    """
-    sns.set() # initalize seaborn
-    sns.set_style(style)
-
-    # default case
-    if data_type == "csv":
-        df = pd.read_csv(file_name, na_values=['#VALUE!', '#DIV/0!'])
-        return df
-    #TODO: Add cases for non-csv file types
-    else:
-        print("ERROR: Currently only supports CSV format. \n > init_data(file_name=\"data.csv\")")
-        pass
 
 
 def make_boxsubplot_by_trait(df=pd.DataFrame(),
@@ -53,7 +25,7 @@ def make_boxsubplot_by_trait(df=pd.DataFrame(),
 
     else:
 
-        title = ""  if title == False else title 
+        title = ""  if title == False else title
         xlabel = x if xlabel == False else xlabel
         ylabel = y if ylabel == False else ylabel
 
@@ -73,12 +45,12 @@ def make_boxsubplot_by_trait(df=pd.DataFrame(),
         sns.swarmplot(ax=ax, x=x, y=y, data=df, color='k')
 
         if mean:
-            sns.lineplot(ax=ax, x=x, y=y, data=mean_df, color='k', markers=True) 
-        
+            sns.lineplot(ax=ax, x=x, y=y, data=mean_df, color='k', markers=True)
+
         ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
         # plt.show()
-        
-        
+
+
 def make_plot(df=pd.DataFrame(), x=False, y=[], plotting_method=False, extra_info={}, caption=False, plotsize_factor=4):
     """
     Make a graph
@@ -94,7 +66,7 @@ def make_plot(df=pd.DataFrame(), x=False, y=[], plotting_method=False, extra_inf
     plt.subplots_adjust(hspace=0.5, wspace=0.5)
 
     # for caption
-    caption = ""  if caption == False else caption 
+    caption = ""  if caption == False else caption
     fig.suptitle(caption, y=0.05, fontsize=10, wrap=True)
 
     for i, el in enumerate(y, start=0):
@@ -111,3 +83,24 @@ def make_plot(df=pd.DataFrame(), x=False, y=[], plotting_method=False, extra_inf
                 ylabel=extra_info[el][2])
 
 
+
+if __name__ =="__main__":
+    df = init_data(config.INPUT_PATH)
+
+    # for box plots
+    make_plot(df=df,
+        x="dias_en_foam",
+        y=config.y_axes,
+        plotting_method=make_boxsubplot_by_trait,
+        extra_info=config.axis_info,
+        caption=config.caption)
+    # plt.tight_layout()
+    plt.draw()
+    plt.savefig(config.OUTPUT_PATHS['aim_one'],
+            dpi=None,
+            quaility=None, # JPG quality; 1 <= x <= 95; None defaults to 95
+            optimize=True, # optimizes JPEGs
+            edgecolor='black',
+            orientation='portrait'
+            )
+    plt.close()
