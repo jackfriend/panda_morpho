@@ -4,6 +4,7 @@ import scipy.stats as stats
 from panda_extension import *
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
+from statsmodel.stats.multicomp import pairwise_turkeyhsd
 
 from panda_extension import *
 import config
@@ -20,7 +21,7 @@ def clean_up(df, log=False):
         df[2] = numpy.log(df[2])
         df[4] = numpy.log(df[4])
         df[6] = numpy.log(df[6])
-    
+
     return df
 
 
@@ -41,31 +42,24 @@ def get_anova(dataframe):
     return anova_table
 
 
+if __name__ == "__main__":
+    df = init_data(config.input_path)
+    df = clean_up(df)
+    fstat, pvalue = fstat_and_pvalue(df, df[2], df[4], df[6])
+    anova = get_anova(df)
 
+    print(df)
+    print("F statistic: {0}\nP value: {1}".format(fstat, pvalue))
+    print(anova)
+    print('\n')
 
+    df = None # reset df
 
+    df = init_data(config.input_path)
+    df = clean_up(df, log=True)
+    fstat, pvalue = fstat_and_pvalue(df, df[2], df[4], df[6])
+    anova = get_anova(df)
 
-
-
-df = init_data(config.input_path)
-df = clean_up(df)
-fstat, pvalue = fstat_and_pvalue(df, df[2], df[4], df[6])
-anova = get_anova(df)
-
-print(df)
-print("F statistic: {0}\nP value: {1}".format(fstat, pvalue))
-print(anova)
-print('\n')
-
-df = None # reset df
-
-df = init_data(config.input_path)
-df = clean_up(df, log=True)
-fstat, pvalue = fstat_and_pvalue(df, df[2], df[4], df[6])
-anova = get_anova(df)
-
-print(df)
-print("F statistic: {0}\nP value: {1}".format(fstat, pvalue))
-print(anova)
-
-
+    print(df)
+    print("F statistic: {0}\nP value: {1}".format(fstat, pvalue))
+    print(anova)
