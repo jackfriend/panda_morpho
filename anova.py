@@ -2,6 +2,7 @@ import pandas as pd
 import numpy
 import scipy.stats as stats
 import statsmodels.api as sm
+import scikit_posthocs
 from statsmodels.formula.api import ols
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
@@ -19,6 +20,11 @@ def clean_up(df, x=None, y=None, log=False):
             df[col] = numpy.log(df[col])
 
     return df
+
+
+def reject_outlier(series):
+    s = scikit_posthocs.outliers_grubbs(series, hypo=False, alpha=0.05)
+    return pd.Series(s)
 
 
 def fstat_and_pvalue(*args):
