@@ -8,7 +8,7 @@ data <- read.csv(INPUT_PATH)
 
 # output data to file
 options(width=300)
-sink(OUTPUT_PATH, append=FALSE, split=TRUE)
+sink(OUTPUT_ANOVA_PATH, append=FALSE, split=TRUE)
 
 # Organize the data -> group by dias_en_foam
 total_length_data <- data %>%
@@ -47,7 +47,7 @@ print("ANOVA MODEL:")
 print(summary(linear_model))
 print(anova_lm)
 
-png(OUTPUT_PNG, units="px", width=900, height=900)
+png(OUTPUT_ANOVA_PNG, units="px", width=900, height=900)
 par(mfrow=c(2,2))
 plot(linear_model)
 dev.off()
