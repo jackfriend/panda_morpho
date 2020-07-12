@@ -13,18 +13,40 @@ pdf(OUTPUT_PCA_PDF) # We will export plots to this PDF
 
 
 # organize the data
+
+# if dividing by the total length... {
 data <- data %>%
-    select(dias_en_foam, clutch, total_length, tail_length, tail_musculate_width, eye_width, head_width, tail_musculate_height, tail_height, yolk_sac_length, yolk_to_mouth_length, nose_length)
+    select(dias_en_foam, clutch, total_length, tail_length, tail_musculate_width, eye_width, head_width, tail_musculate_height, tail_height, yolk_sac_length, yolk_to_mouth_length, nose_length) %>%
+    transform( # transform data to control for total length
+              tail_length           = tail_length / total_length,
+              tail_musculate_width  = tail_musculate_width / total_length,
+              eye_width             = eye_width / total_length,
+              head_width            = head_width / total_length,
+              tail_musculate_height = tail_musculate_height / total_length,
+              tail_height           = tail_height / total_length,
+              yolk_sac_length       = yolk_sac_length / total_length,
+              yolk_to_mouth_length  = yolk_to_mouth_length / total_length,
+              nose_length           = nose_length / total_length
+    ) %>%
+    select(dias_en_foam, clutch, tail_length, tail_musculate_width, eye_width, head_width, tail_musculate_height, tail_height, yolk_sac_length, yolk_to_mouth_length, nose_length) # Note that we have now dropped the total length column 
+# }
+
+
+# if we do not want to control for the total_length {
+# data <- data %>%
+#     select(dias_en_foam, clutch, total_length, tail_length, tail_musculate_width, eye_width, head_width, tail_musculate_height, tail_height, yolk_sac_length, yolk_to_mouth_length, nose_length)
+# }
+
 
 data$dias_en_foam <- factor(data$dias_en_foam) # change dias_en_foam to categorical
 data$clutch <- factor(data$clutch) # change dias_en_foam to categorical
-
 
 # Do the PCA
 pr_data <- data %>%
     select(- c(dias_en_foam, clutch)) # drop dias_en_foam for pr
 
 pr <- prcomp(na.omit(pr_data), scale=TRUE)
+
 
 # extract PC scores and add to data
 data <- merge(data, pr$x, by="row.names", all.x=TRUE)
@@ -34,7 +56,19 @@ data <- data %>%
 row.names(data) <- NULL # reset indexing
 
 # print an output
-print(data)
+print("")
+print("")
+print("___________________________________________________________________________")
+print("DATA")
+write.csv(data)
+
+print("")
+print("")
+print("___________________________________________________________________________")
+print("PCA")
+write.csv(summary(pr)$importance)
+print("")
+write.csv(pr$rotation)
 
 # Plot
 plot(pr, type='l')
@@ -64,8 +98,8 @@ get_anova_of_pca <- function(dataset, PC_comp, PC_comp_str) {
 
     print("___________________________________________________________________________")
     print("SUMMARY:")
-    print(summary)
-    print(anova_data)
+    write.csv(summary)
+    write.csv(anova_data)
 
     # linear model
     lm_formula <- paste(PC_comp_str, "~ dias_en_foam")
@@ -79,13 +113,13 @@ get_anova_of_pca <- function(dataset, PC_comp, PC_comp_str) {
 
     print("___________________________________________________________________________")
     print("ANOVA MODEL:")
-    print(summary(linear_model))
-    print(anova_lm)
+    write.csv(summary(linear_model)$coefficients)
+    write.csv(anova_lm)
 
     print("___________________________________________________________________________")
     print("LOG ANOVA MODEL:")
-    print(summary(log_linear_model))
-    print(log_anova_lm)
+    write.csv(summary(log_linear_model)$coefficients)
+    write.csv(log_anova_lm)
 }
 
 print("")
@@ -103,11 +137,21 @@ print("")
 print("___________________________________________________________________________")
 print("PC3:")
 get_anova_of_pca(data, PC3, "PC3")
+print("")
+print("")
 print("___________________________________________________________________________")
-print("")
-print("")
 print("PC4:")
 get_anova_of_pca(data, PC4, "PC4")
+print("")
+print("")
+print("___________________________________________________________________________")
+print("PC5:")
+get_anova_of_pca(data, PC5, "PC5")
+print("")
+print("")
+print("___________________________________________________________________________")
+print("PC6:")
+get_anova_of_pca(data, PC6, "PC6")
 
 # Output data to file
 dev.off()
